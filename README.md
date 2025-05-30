@@ -27,7 +27,7 @@ my-fullstack-app/
 ### Chạy frontend
 
 1. Cài đặt các gói cần thiết: `npm install`
-2. Cài thêm tailwindcss: `npx tailwindcss init -p`
+2. Cài thêm tailwindcss: `npm install -D tailwindcss postcss autoprefixer`
 2. Cài đặt các icon: `npm install react-icons`
 3. Cài đặt các icon: `npm install react-router-dom`
 4. Cài đặt các icon: `npm install react-scripts`
