@@ -1,0 +1,115 @@
+/* Block: staff-header */
+.staff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1f2937; /* bg-gray-800 */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Logo */
+  .staff-header_logo {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  /* Actions */
+  .staff-header_actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  /* Notification */
+  .staff-header_notification {
+    position: relative;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  
+  .staff-header_notification:hover {
+    color: #facc15; /* hover:text-yellow-400 */
+  }
+  
+  .staff-header_notification svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .staff-header_notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background-color: #ef4444; /* bg-red-500 */
+    color: white;
+    font-size: 0.7rem;
+    padding: 0 6px;
+    border-radius: 999px;
+  }
+  
+  /* Avatar Wrapper */
+  .staff-header_avatar-wrapper {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  /* Avatar image */
+  .staff-header_avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 2px solid white;
+  }
+  
+  /* Dropdown */
+  .staff-header_dropdown {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    width: 160px;
+    background: white;
+    color: #374151;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .staff-header_dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+  
+  .staff-header_dropdown-item:hover {
+    background-color: #f3f3f3;
+  }
+  /* Quản lý nav menu */
+.staff-header_nav {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  
+  .staff-header_nav-item {
+    color: white;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  
+  .staff-header_nav-item:hover {
+    color: #facc15; /* text-yellow-400 */
+  }
+  

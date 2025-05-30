@@ -8,16 +8,38 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const admin = {
-    username: 'admin',
-    password: '123456'
-  };
+  const users = [
+    { username: 'admin', password: '123456', role: 'admin' },
+    { username: 'user', password: '123456', role: 'user' },
+    { username: 'staff', password: '123456', role: 'staff' },
+    { username: 'doctor', password: '123456', role: 'doctor' }
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username === admin.username && password === admin.password) {
-      localStorage.setItem('user', JSON.stringify({ username, role: 'admin' }));
-      navigate('/dashboard');
+    const foundUser = users.find(
+      (u) => u.username === username && u.password === password
+    );
+
+    if (foundUser) {
+      localStorage.setItem('user', JSON.stringify(foundUser));
+
+      switch (foundUser.role) {
+        case 'admin':
+          navigate('/admin'); 
+          break;
+        case 'user':
+          navigate('/user'); 
+          break;
+        case 'staff':
+          navigate('/staff'); 
+          break;
+        case 'doctor':
+          navigate('/doctor'); 
+          break;
+        default:
+          navigate('/unauthorized');
+      }
     } else {
       setError('Tài khoản hoặc mật khẩu không đúng');
     }
@@ -35,6 +57,7 @@ const Login = () => {
             className="login-input"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            placeholder="Nhập tài khoản..."
           />
 
           <label className="login-label">Mật khẩu</label>

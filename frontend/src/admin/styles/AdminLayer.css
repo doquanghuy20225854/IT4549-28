@@ -1,0 +1,32 @@
+.admin-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .admin-body {
+    display: flex;
+    flex: 1;
+  }
+  
+  .admin-sidebar {
+    width: 200px;
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+  
+  .admin-main {
+    flex: 1;
+    padding: 24px;
+    background-color: #f9fafb;
+  }
+  
+  .admin-footer {
+    margin-top: auto;
+    background-color: #1f2937;
+    color: white;
+    text-align: center;
+    padding: 16px 0;
+    font-size: 14px;
+  }
+  

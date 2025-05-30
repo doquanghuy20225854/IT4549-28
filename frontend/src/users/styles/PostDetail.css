@@ -1,0 +1,54 @@
+
+.post-detail {
+    background-color: #ffffff;
+    padding: 40px 24px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
+  
+  .post-detail__container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .post-detail__title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    text-align: center;
+    color: #0a3d62;
+  }
+  
+  .post-detail__image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .post-detail__price {
+    font-size: 14px;
+    font-style: italic;
+    color: #888;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .post-detail__content {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    text-align: justify;
+  }
+  
+  .post-detail__note {
+    font-size: 14px;
+    color: #888;
+    font-style: italic;
+    margin-top: 24px;
+    border-top: 1px solid #ddd;
+    padding-top: 12px;
+    text-align: center;
+  }
+  

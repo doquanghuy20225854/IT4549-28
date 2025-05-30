@@ -1,56 +1,27 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './login/Login';
-import Dashboard from './admin/Dashboard';
-import About from './admin/pages/About';
-import Services from './admin/pages/Services';
-import Reports from './admin/pages/Reports';
-import NotFound from './admin/pages/NotFound';
 
-import Boarding from './admin/pages/admin/Boarding';
-import Appointments from './admin/pages/admin/Appointments';
-import Staff from './admin/pages/admin/Staff';
-import Bookings from './admin/pages/admin/Bookings';
-import Servicesing from './admin/pages/admin/Servicesing'; 
-import AdminReports from './admin/pages/admin/Reports';
-import AdminRoute from './admin/components/AdminRoute';
+import Login from './login/Login';
+import Unauthorized from './users/components/Unauthorized';
+import NotFound from './users/pages/NotFound';
+
+import AdminRoutes from './routes/AdminRoutes';
+import UserRoutes from './routes/UserRoutes';
+import StaffRoutes from './routes/StaffRoutes';
+import DoctorRoutes from './routes/DoctorRoutes';
 
 function App() {
   return (
-    <Router>  
+    <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/reports" element={<Reports />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
-        <Route
-          path="/admin/boarding"
-          element={<AdminRoute><Boarding /></AdminRoute>}
-        />
-        <Route
-          path="/admin/appointments"
-          element={<AdminRoute><Appointments /></AdminRoute>}
-        />
-        <Route
-          path="/admin/staff"
-          element={<AdminRoute><Staff /></AdminRoute>}
-        />
-        <Route
-          path="/admin/bookings"
-          element={<AdminRoute><Bookings /></AdminRoute>}
-        />
-        <Route
-          path="/admin/servicesing"
-          element={<AdminRoute><Servicesing /></AdminRoute>}
-        />
-        <Route
-          path="/admin/reports"
-          element={<AdminRoute><AdminReports /></AdminRoute>}
-        />
+        <Route path="/admin/*" element={<AdminRoutes />} />
+        <Route path="/user/*" element={<UserRoutes />} />
+        <Route path="/staff/*" element={<StaffRoutes />} />
+        <Route path="/doctor/*" element={<DoctorRoutes />} />
 
-        {/* Not Found  */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

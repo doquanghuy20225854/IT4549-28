@@ -1,0 +1,115 @@
+/* Block: staff-header */
+.docter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1f2937; /* bg-gray-800 */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+      
+  /* Logo */
+  .docter-header_logo {
+    font-size: 1.25rem;
+    font-weight: bold;  
+  }
+  
+  /* Actions */
+  .docter-header_actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  
+  /* Notification */
+  .docter-header_notification {
+    position: relative;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  
+  .docter-header_notification:hover {
+    color: #facc15; /* hover:text-yellow-400 */
+  }
+  
+  .docter-header_notification svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .docter-header_notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background-color: #ef4444; /* bg-red-500 */
+    color: white;
+    font-size: 0.7rem;
+    padding: 0 6px;
+    border-radius: 999px;
+  }
+  
+  /* Avatar Wrapper */
+  .docter-header_avatar-wrapper {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  /* Avatar image */
+  .docter-header_avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 2px solid white;
+  }
+  
+  /* Dropdown */
+  .docter-header_dropdown {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    width: 160px;
+    background: white;
+    color: #374151;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .docter-header_dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+  
+  .docter-header_dropdown-item:hover {
+    background-color: #f3f3f3;
+  }
+  /* Quản lý nav menu */
+.docter-header_nav {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  
+  .docter-header_nav-item {
+    color: white;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500; 
+    transition: color 0.2s;
+  }
+  
+  .docter-header_nav-item:hover {
+    color: #facc15; /* text-yellow-400 */
+  }
+  
