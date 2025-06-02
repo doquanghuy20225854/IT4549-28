@@ -1,0 +1,72 @@
+.admin-profile-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .admin-card {
+    display: flex;
+    gap: 20px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .admin-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .admin-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .admin-info input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .admin-info button {
+    width: fit-content;
+    padding: 8px 12px;
+    border: none;
+    background-color: #0077cc;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .admin-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .admin-actions button:last-child {
+    background-color: #ff4d4f;
+  }
+  
+  .admin-stats {
+    margin-top: 30px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .admin-stats ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .admin-stats li {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+  

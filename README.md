@@ -22,3 +22,30 @@ my-fullstack-app/
 │
 ├── .gitignore
 └── README.md
+
+
+### Chạy frontend
+
+1. Cài đặt các gói cần thiết: `npm install`
+2. Cài thêm tailwindcss: `npm install -D tailwindcss postcss autoprefixer`
+2. Cài đặt các icon: `npm install react-icons`
+3. Cài đặt các icon: `npm install react-router-dom`
+4. Cài đặt các icon: `npm install react-scripts`
+5. Cài đặt biểu đồ: `npm install recharts`
+6. Chạy ứng dụng: `npm start`
+7. Mở trình duyệt và truy cập `http://localhost:3000`
+
+
+TK demo
+admin: admin
+pass: 123456
+
+user: user
+pass: 123456
+
+staff: staff
+pass: 123456
+
+doctor: doctor
+pass: 123456
+

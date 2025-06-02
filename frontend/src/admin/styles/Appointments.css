@@ -7,8 +7,7 @@
 
   .appointments-container h2 {
     text-align: center;
-    margin-bottom: 25px;
-    font-weight: 700;
+    padding: 20px;  
     color: #007bff;
   }
   
@@ -112,5 +111,16 @@
   
   .btn-delete:hover {
     background-color: #f8d7da;
+  }
+  .form-section select {
+    padding: 6px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .appointments-table select {
+    padding: 4px 8px;
+    font-size: 14px;
+    border-radius: 4px;
   }
   
