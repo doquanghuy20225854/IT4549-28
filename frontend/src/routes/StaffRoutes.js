@@ -8,7 +8,7 @@ import StaffAppointments from '../staff/pages/StaffAppointments';
 import StaffBoarding from '../staff/pages/StaffBoarding';
 import StaffCustomers from '../staff/pages/StaffCustomers';
 import StaffStore from '../staff/pages/StaffStore';
-import StaffServices from '../staff/pages/StaffServices';
+// import StaffServices from '../staff/pages/StaffServices';
 
 const StaffRoutes = () => (
   <ProtectedRoute allowedRoles={['staff']}>
@@ -19,7 +19,7 @@ const StaffRoutes = () => (
         <Route path="/boarding" element={<StaffBoarding />} />
         <Route path="/customers" element={<StaffCustomers />} />
         <Route path="/store" element={<StaffStore />} />
-        <Route path="/services" element={<StaffServices />} />
+        {/* <Route path="/services" element={<StaffServices />} /> */}
       </Routes>
     </StaffLayout>
   </ProtectedRoute>

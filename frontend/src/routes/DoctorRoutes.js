@@ -2,18 +2,18 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ProtectedRoute from '../users/components/ProtectedRoute';
 
-import DocterLayout from '../docter/components/DocterLayout';
-import DashboardDocter from '../docter/pages/DocterDashboard';
+import DoctorLayout from '../doctor/components/DoctorLayout';
+import DashboardDoctor from '../doctor/pages/DoctorDashboard';
 
 
-const DocterRoutes = () => (
+const DoctorRoutes = () => (
   <ProtectedRoute allowedRoles={['doctor']}>
-    <DocterLayout>       
+    <DoctorLayout>       
       <Routes>
-        <Route path="" element={<DashboardDocter />} /> 
+        <Route path="" element={<DashboardDoctor />} /> 
       </Routes>
-    </DocterLayout>
+    </DoctorLayout>
   </ProtectedRoute>
 );
 
-export default DocterRoutes;
+export default DoctorRoutes;
