@@ -17,10 +17,10 @@ const HeaderStaff = () => {
       <nav className="staff-header_nav">
         <Link to="/staff" className="staff-header_nav-item">Trang chủ</Link>
         <Link to="/staff/boarding" className="staff-header_nav-item">Lưu trú</Link>
-        <Link to="/staff/servicesing" className="staff-header_nav-item">Dịch vụ</Link>
+        <Link to="/staff/services" className="staff-header_nav-item">Dịch vụ</Link>
         <Link to="/staff/appointments" className="staff-header_nav-item">Đặt Lịch </Link>
         <Link to="/staff/store" className="staff-header_nav-item">Sản phẩm</Link>
-        <Link to="/staff/users" className="staff-header_nav-item">Khách hàng</Link>
+        <Link to="/staff/customers" className="staff-header_nav-item">Khách hàng</Link>
       </nav>
 
       <div className="staff-header_actions">

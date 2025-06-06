@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import "../styles/StaffBoarding.css";
+import "../styles/DoctorBoarding.css";
 
 const dummyData = [
   { id: 1, name: "Mèo Tom", species: "Mèo", owner: "Nguyễn Văn A", checkIn: "2025-05-18", checkOut: "2025-05-20" },
@@ -16,7 +16,7 @@ const getStatus = (checkIn, checkOut) => {
   return "Đang lưu trú";
 };
 
-const StaffBoarding = () => {
+const DoctorBoarding = () => {
   const [pets, setPets] = useState(dummyData);
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
@@ -163,4 +163,4 @@ const StaffBoarding = () => {
   );
 };
 
-export default StaffBoarding;
+export default DoctorBoarding;

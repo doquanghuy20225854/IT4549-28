@@ -1,4 +1,4 @@
-.docter-footer {
+.doctor-footer {
     background-color: #1f2937;
     color: #ffffff;
     padding: 16px 24px;
@@ -7,10 +7,10 @@
     font-size: 14px;    
   }
   
-  .docter-footer_text {
+  .doctor-footer_text {
     margin: 0;
   }
-  .docter-footer {
+  .doctor-footer {
     margin-top: auto; /* Đẩy footer xuống cuối trang khi có ít nội dung */
     background-color: #1f2937; /* bg-gray-800 */
     color: white;
@@ -19,6 +19,6 @@
     font-size: 14px;
   }
   
-  .docter-footer_text {
+  .doctor-footer_text {
     margin: 0;
   }

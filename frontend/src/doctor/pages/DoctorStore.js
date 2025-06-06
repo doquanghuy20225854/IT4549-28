@@ -1,7 +1,7 @@
 import React from "react";
-import "../styles/StaffStore.css";
+import "../styles/DoctorStore.css";
 
-const StaffStore = () => {
+const DoctorStore = () => {
   // Dữ liệu mẫu thống kê
   const statistics = [
     { category: "Thức ăn", quantity: 120 },
@@ -37,4 +37,4 @@ const StaffStore = () => {
 /**
  * @return {ReactElement} Trang Cửa hàng
  */
-export default StaffStore;
+export default DoctorStore;
