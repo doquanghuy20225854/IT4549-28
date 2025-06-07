@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import authRoutes from './routes/AuthRoutes.js';
+import petRoutes from './routes/PetRoutes.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/pets', petRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
