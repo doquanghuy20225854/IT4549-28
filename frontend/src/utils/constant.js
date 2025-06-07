@@ -4,3 +4,10 @@ export const AUTH_ROUTES = `/api/auth`;
 export const LOGIN_ROUTE = `${AUTH_ROUTES}/login`;
 export const GET_USER_INFO_ROUTE = `${AUTH_ROUTES}/get-user-info`;
 export const LOGOUT_ROUTE = `${AUTH_ROUTES}/logout`;
+
+// Pet Routes
+export const PET_ROUTES = `/api/pets`;
+export const ADD_PET_ROUTE = `${PET_ROUTES}/add-pet`;
+export const DELETE_PET_ROUTE = `${PET_ROUTES}/delete-pet/:id`;
+export const GET_ALL_PETS_ROUTE = `${PET_ROUTES}/get-all-pets`;
+export const GET_PET_BY_ID_ROUTE = `${PET_ROUTES}/get-pet-by-id/:id`;

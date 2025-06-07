@@ -8,11 +8,17 @@ const PetSchema = new mongoose.Schema({
     },
     name: {
         type: String,
+        required: true
     }, 
     age: {
-        type: Number
+        type: Number,
+        required: true
     },
     species: {
+        type: String,
+        required: true
+    },
+    description: {
         type: String
     }
 });

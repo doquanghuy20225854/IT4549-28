@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import "../styles/Boarding.css";
+import { apiClient } from "../../lib/api-client";
+import { ADD_PET_ROUTE } from "../../utils/constant";
 
 const dummyData = [
   { id: 1, name: "Mèo Tom", species: "Mèo", owner: "Nguyễn Văn A", checkIn: "2025-05-18", checkOut: "2025-05-20" },
@@ -47,17 +49,30 @@ const Boarding = () => {
     }
   };
 
-  const handleAddConfirmed = () => {
-    const newPet = {
-      id: Date.now(),
-      name: nameRef.current.value || "Chưa đặt tên",
-      species: speciesRef.current.value || "Không rõ",
-      owner: ownerRef.current.value || "Không rõ",
-      checkIn: checkInRef.current.value || new Date().toISOString().split("T")[0],
-      checkOut: checkOutRef.current.value || new Date().toISOString().split("T")[0],
-    };
-    setPets([...pets, newPet]);
-    setShowAddModal(false);
+  const handleAddConfirmed = async () => {
+    try {
+        const newPet = {
+            name: nameRef.current.value || "Chưa đặt tên",
+            species: speciesRef.current.value || "Không rõ",
+            ownerId: ownerRef.current.value || "Không rõ",
+            age: 0, // Có thể thêm trường age vào form nếu cần
+            description: `Check-in: ${checkInRef.current.value || new Date().toISOString().split("T")[0]}, Check-out: ${checkOutRef.current.value || new Date().toISOString().split("T")[0]}`
+        };
+
+        const response = await apiClient.post(ADD_PET_ROUTE, newPet, {
+            withCredentials: true
+        });
+
+        if (response.data.success) {
+            setPets([...pets, response.data.data]);
+            setShowAddModal(false);
+            // Có thể thêm thông báo thành công ở đây
+        }
+    } catch (error) {
+        console.error('Error adding pet:', error);
+        // Xử lý lỗi và hiển thị thông báo cho người dùng
+        alert('Có lỗi xảy ra khi thêm thú cưng. Vui lòng thử lại.');
+    }
   };
 
   const handleEdit = (id) => {
