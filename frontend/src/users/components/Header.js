@@ -2,14 +2,37 @@ import React, { useState } from "react";
 import { NavLink, useNavigate, Link } from "react-router-dom";
 import { Bell, LogOut } from "lucide-react";
 import "../styles/Header.css";
+import { apiClient } from "../../lib/api-client";
+import { LOGOUT_ROUTE } from "../../utils/constant";
+import { useAppStore } from "../../store";
 
 const Header = () => {
   const navigate = useNavigate();
   const [servicesOpen, setServicesOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const { clearUserInfo } = useAppStore();
 
-  const handleLogout = () => {
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      const response = await apiClient.post(
+        LOGOUT_ROUTE,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      clearUserInfo();
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error("Logout error:", error?.response?.data?.message || error.message);
+      // Nếu có lỗi vẫn clear state và chuyển về trang login
+      clearUserInfo();
+      navigate('/', { replace: true });
+    }
   };
 
   const toggleServices = () => {

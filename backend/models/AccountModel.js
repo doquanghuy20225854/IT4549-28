@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import {genSalt, hash} from 'bcrypt';
 
 const AccountSchema = new mongoose.Schema({
     username: {
@@ -22,10 +23,16 @@ const AccountSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'doctor', 'staff', 'owner'],
+        enum: ['admin', 'doctor', 'staff', 'user'],
         require: true,
-        default: 'owner'
+        default: 'user'
     }
+});
+
+AccountSchema.pre('save', async function(next) {
+    const salt = await genSalt(10);
+    this.password = await hash(this.password, salt);
+    next();
 });
 
 const Account = mongoose.model('Account', AccountSchema);

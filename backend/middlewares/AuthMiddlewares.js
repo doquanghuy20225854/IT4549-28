@@ -6,7 +6,7 @@ export const verifyToken = (req, res, next) => {
         return res.status(401).json({message: "You are not authenticated!"});
     }
     try {
-        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.userId = decoded.userId;
         req.user = decoded;
         next();

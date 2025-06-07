@@ -1,47 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import { apiClient } from './../lib/api-client';
+import { LOGIN_ROUTE } from '../utils/constant';
+import { useAppStore } from '../store';
 
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const { userInfo, setUserInfo } = useAppStore();
 
-  const users = [
-    { username: 'admin', password: '123456', role: 'admin' },
-    { username: 'user', password: '123456', role: 'user' },
-    { username: 'staff', password: '123456', role: 'staff' },
-    { username: 'doctor', password: '123456', role: 'doctor' }
-  ];
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const foundUser = users.find(
-      (u) => u.username === username && u.password === password
-    );
-
-    if (foundUser) {
-      localStorage.setItem('user', JSON.stringify(foundUser));
-
-      switch (foundUser.role) {
+  useEffect(() => {
+    if (userInfo) {
+      switch (userInfo.role) {
         case 'admin':
-          navigate('/admin'); 
+          navigate('/admin', { replace: true });
           break;
         case 'user':
-          navigate('/user'); 
+          navigate('/user', { replace: true });
           break;
         case 'staff':
-          navigate('/staff'); 
+          navigate('/staff', { replace: true });
           break;
         case 'doctor':
-          navigate('/doctor'); 
+          navigate('/doctor', { replace: true });
           break;
         default:
-          navigate('/unauthorized');
+          setUserInfo(null);
       }
-    } else {
-      setError('Tài khoản hoặc mật khẩu không đúng');
+    }
+  }, [userInfo, navigate, setUserInfo]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await apiClient.post(
+        LOGIN_ROUTE, 
+        { username, password },
+        { withCredentials: true }
+      );
+      
+      setUserInfo(response.data.account);
+    } catch (error) {
+      console.error('Login error:', error);
+      if (error.response) {
+        setError(error.response.data.message || 'Đã xảy ra lỗi trong quá trình đăng nhập');
+      } else {
+        setError('Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau.');
+      }
     }
   };
 

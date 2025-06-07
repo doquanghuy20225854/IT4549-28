@@ -1,13 +1,40 @@
 import React, { useState } from "react";
 import { Bell, LogOut } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/AdminHeader.css";
+import { apiClient } from "../../lib/api-client";
+import { LOGOUT_ROUTE } from "../../utils/constant";
+import { useAppStore } from "../../store";
 
 const HeaderAdmin = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const { clearUserInfo } = useAppStore();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await apiClient.post(
+        LOGOUT_ROUTE,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      
+      clearUserInfo();
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error("Logout error:", error?.response?.data?.message || error.message);
+      clearUserInfo();
+      navigate('/', { replace: true });
+    }
   };
 
   return (
@@ -43,18 +70,12 @@ const HeaderAdmin = () => {
               <Link to="/admin/profile" className="admin-header_dropdown-item">
                 Hồ sơ
               </Link>
-              <Link
-                to="/"
+              <button
+                onClick={handleLogout}
                 className="admin-header_dropdown-item"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setTimeout(() => {
-                    window.location.href = "/";
-                  }, 300);
-                }}
               >
                 <LogOut /> Đăng xuất
-              </Link>
+              </button>
             </div>
           )}
         </div>
