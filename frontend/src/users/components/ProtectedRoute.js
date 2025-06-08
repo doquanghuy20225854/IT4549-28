@@ -21,7 +21,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
         });
         
         if (response.data) {
-          setUserInfo(response.data);
+        setUserInfo(response.data);
         } else {
           throw new Error('No user data received');
         }

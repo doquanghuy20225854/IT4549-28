@@ -64,7 +64,7 @@ const Boarding = () => {
             alert('Vui lòng điền đầy đủ thông tin bắt buộc (Tên, Loài, Chủ sở hữu)');
             return;
         }
-        const newPet = {
+    const newPet = {
             name: nameRef.current.value,
             species: speciesRef.current.value,
             ownerName: ownerRef.current.value,
@@ -83,7 +83,7 @@ const Boarding = () => {
             // Sau khi thêm mới, lấy lại danh sách thú cưng từ backend
             const petsRes = await apiClient.get(GET_ALL_PETS_ROUTE);
             setPets(petsRes.data.data);
-            setShowAddModal(false);
+    setShowAddModal(false);
             alert('Thêm thú cưng thành công!');
         } else {
             throw new Error(response.data.error || 'Có lỗi xảy ra khi thêm thú cưng');
