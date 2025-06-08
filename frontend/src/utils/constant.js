@@ -18,3 +18,10 @@ export const GET_LIST_USER_ROUTE = `${USER_ROUTES}/list-user`;
 export const ADD_USER_ROUTE = `${USER_ROUTES}/add-user`;
 export const UPDATE_USER_ROUTE = `${USER_ROUTES}/update-user`;
 export const DELETE_USER_ROUTE = `${USER_ROUTES}/delete-user`;
+
+// Service Routes
+export const SERVICE_ROUTES = `/api/services`;
+export const GET_LIST_SERVICE_ROUTE = `${SERVICE_ROUTES}/list-service`;
+export const ADD_SERVICE_ROUTE = `${SERVICE_ROUTES}/add-service`;
+export const UPDATE_SERVICE_ROUTE = `${SERVICE_ROUTES}/update-service`;
+export const DELETE_SERVICE_ROUTE = `${SERVICE_ROUTES}/delete-service`;

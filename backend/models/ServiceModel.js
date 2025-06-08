@@ -5,14 +5,17 @@ const ServiceSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    type: {
-        type: String
+    staff: {
+        type: String,
+        required: true
     },
-    description: {
-        type: String
+    date: {
+        type: String,
+        required: true
     },
-    price: {
-        type: Number
+    note: {
+        type: String,
+        required: true
     }
 })
 
