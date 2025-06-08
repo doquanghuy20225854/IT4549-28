@@ -11,3 +11,10 @@ export const ADD_PET_ROUTE = `${PET_ROUTES}/add-pet`;
 export const DELETE_PET_ROUTE = `${PET_ROUTES}/delete-pet/:id`;
 export const GET_ALL_PETS_ROUTE = `${PET_ROUTES}/get-all-pets`;
 export const GET_PET_BY_ID_ROUTE = `${PET_ROUTES}/get-pet-by-id/:id`;
+
+// User Routes
+export const USER_ROUTES = `/api/users`;
+export const GET_LIST_USER_ROUTE = `${USER_ROUTES}/list-user`;
+export const ADD_USER_ROUTE = `${USER_ROUTES}/add-user`;
+export const UPDATE_USER_ROUTE = `${USER_ROUTES}/update-user`;
+export const DELETE_USER_ROUTE = `${USER_ROUTES}/delete-user`;

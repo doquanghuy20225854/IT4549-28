@@ -1,49 +1,114 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/Users.css";
 import "../styles/AdminHeader.css";
-const Users = () => {
-  const [usersList, setUsersList] = useState([
-    { id: 1, name: "Nguyễn Văn A", role: "Bác sĩ", phone: "0123456789" },
-    { id: 2, name: "Trần Thị B", role: "Bác sĩ", phone: "0987654321" },
-    { id: 3, name: "Lê Văn C", role: "Nhân viên", phone: "0123334444" },
-    { id: 4, name: "Nguyễn Thị D", role: "Nhân viên", phone: "0988887777" },
-    { id: 5, name: "Ph m Minh E", role: "Lễ tân", phone: "0126668888" },
-    { id: 6, name: "Nguyễn Văn F", role: "Bác sĩ", phone: "0129876543" },
-    { id: 7, name: "Trần Thanh G", role: "Bác sĩ", phone: "0123456789" },
-    { id: 8, name: "Nguyễn Thị H", role: "Nhân viên", phone: "0987654321" },
-    { id: 9, name: "Lê Văn I", role: "Lễ tân", phone: "0123334444" },
-    { id: 10, name: "Nguyễn Văn J", role: "Bác sĩ", phone: "0126668888" },
-    { id: 11, name: "Nguyễn Văn K", role: "Khách hàng", phone: "0123456789" },
-    { id: 12, name: "Nguyễn Văn L", role: "Khách hàng", phone: "0987654321" },
-  ]);
+import { GET_LIST_USER_ROUTE, ADD_USER_ROUTE, UPDATE_USER_ROUTE, DELETE_USER_ROUTE } from "../../utils/constant";
+import { apiClient } from './../../lib/api-client';
+import { toast } from 'react-toastify';
 
+const Users = () => {
+  const [usersList, setUsersList] = useState([]);
   const [form, setForm] = useState({ name: "", role: "", phone: "" });
   const [editing, setEditing] = useState(null);
+  const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-  const handleAdd = () => {
-    if (!form.name || !form.role || !form.phone) {
-      alert("Vui lòng nhập đầy đủ thông tin.");
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.get(GET_LIST_USER_ROUTE, {withCredentials: true});
+      setUsersList(response.data.users);
+    } catch (error) {
+      toast.error("Không thể tải danh sách người dùng: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const validateForm = (data) => {
+    if (!data.name || data.name.trim() === "") {
+      toast.error("Tên người dùng không được để trống");
+      return false;
+    }
+    if (!data.role || data.role.trim() === "") {
+      toast.error("Chức vụ không được để trống");
+      return false;
+    }
+    if (!data.phone || !/^[0-9]{10}$/.test(data.phone)) {
+      toast.error("Số điện thoại không hợp lệ (cần đúng 10 chữ số)");
+      return false;
+    }
+    return true;
+  };
+
+  const handleAdd = async () => {
+    if (!validateForm(form)) return;
+
+    try {
+      setLoading(true);
+      const response = await apiClient.post(ADD_USER_ROUTE, form, {withCredentials: true});
+      if (response.status === 201) {
+        setUsersList([...usersList, response.data.user]);
+        setForm({ name: "", role: "", phone: "" });
+        toast.success("Thêm người dùng thành công!");
+      }
+    } catch (error) {
+      toast.error("Không thể thêm người dùng: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!id) {
+      toast.error("ID người dùng không hợp lệ");
       return;
     }
-    const newUser = {
-      id: Date.now(),
-      ...form,
-    };
-    setUsersList([...usersList, newUser]);
-    setForm({ name: "", role: "", phone: "" });
-  };
 
-  const handleDelete = (id) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
-      setUsersList(usersList.filter((s) => s.id !== id));
+      try {
+        setLoading(true);
+        const response = await apiClient.delete(`${DELETE_USER_ROUTE}/${id}`, {withCredentials: true});
+        if (response.status === 200) {
+          setUsersList(usersList.filter((s) => s._id !== id));
+          toast.success("Xóa người dùng thành công!");
+        }
+      } catch (error) {
+        toast.error("Không thể xóa người dùng: " + error.message);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const handleUpdate = () => {
-    setUsersList(
-      usersList.map((s) => (s.id === editing.id ? { ...editing } : s))
-    );
-    setEditing(null);
+  const handleUpdate = async () => {
+    if (!editing || !editing._id) {
+      toast.error("ID người dùng không hợp lệ");
+      return;
+    }
+
+    if (!validateForm(editing)) return;
+
+    try {
+      setLoading(true);
+      const response = await apiClient.put(`${UPDATE_USER_ROUTE}/${editing._id}`, {
+        name: editing.name,
+        role: editing.role,
+        phone: editing.phone
+      }, {withCredentials: true});
+      
+      if (response.status === 200) {
+        setUsersList(usersList.map((s) => (s._id === editing._id ? response.data.user : s)));
+        setEditing(null);
+        toast.success("Cập nhật thông tin thành công!");
+      }
+    } catch (error) {
+      toast.error("Không thể cập nhật thông tin: " + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,21 +121,28 @@ const Users = () => {
           placeholder="Tên người dùng"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
+          disabled={loading}
         />
         <input
           type="text"
           placeholder="Chức vụ"
           value={form.role}
           onChange={(e) => setForm({ ...form, role: e.target.value })}
+          disabled={loading}
         />
         <input
           type="text"
           placeholder="Số điện thoại"
           value={form.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          disabled={loading}
         />
-        <button onClick={handleAdd}>Thêm người dùng</button>
+        <button onClick={handleAdd} disabled={loading}>
+          {loading ? "Đang xử lý..." : "Thêm người dùng"}
+        </button>
       </div>
+
+      {loading && <div className="loading">Đang tải...</div>}
 
       <table className="staff-table">
         <thead>
@@ -84,14 +156,14 @@ const Users = () => {
         </thead>
         <tbody>
           {usersList.map((user, index) => (
-            <tr key={user.id}>
+            <tr key={user._id}>
               <td>{index + 1}</td>
               <td>{user.name}</td>
               <td>{user.role}</td>
               <td>{user.phone}</td>
               <td>
-                <button onClick={() => setEditing(user)}>Sửa</button>
-                <button onClick={() => handleDelete(user.id)}>Xóa</button>
+                <button onClick={() => setEditing(user)} disabled={loading}>Sửa</button>
+                <button onClick={() => handleDelete(user._id)} disabled={loading}>Xóa</button>
               </td>
             </tr>
           ))}
@@ -105,17 +177,25 @@ const Users = () => {
             <input
               value={editing.name}
               onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+              disabled={loading}
+              placeholder="Tên người dùng"
             />
             <input
               value={editing.role}
               onChange={(e) => setEditing({ ...editing, role: e.target.value })}
+              disabled={loading}
+              placeholder="Chức vụ"
             />
             <input
               value={editing.phone}
               onChange={(e) => setEditing({ ...editing, phone: e.target.value })}
+              disabled={loading}
+              placeholder="Số điện thoại"
             />
-            <button onClick={handleUpdate}>Cập nhật</button>
-            <button onClick={() => setEditing(null)}>Đóng</button>
+            <button onClick={handleUpdate} disabled={loading}>
+              {loading ? "Đang cập nhật..." : "Cập nhật"}
+            </button>
+            <button onClick={() => setEditing(null)} disabled={loading}>Đóng</button>
           </div>
         </div>
       )}
