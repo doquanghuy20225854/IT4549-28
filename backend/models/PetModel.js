@@ -1,9 +1,8 @@
 import mongoose from 'mongoose';
 
 const PetSchema = new mongoose.Schema({
-    ownerId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+    ownerName: {
+        type: String,
         required: true
     },
     name: {
@@ -19,6 +18,12 @@ const PetSchema = new mongoose.Schema({
         required: true
     },
     description: {
+        type: String
+    },
+    checkIn: {
+        type: String
+    },
+    checkOut: {
         type: String
     }
 });
