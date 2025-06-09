@@ -25,3 +25,9 @@ export const GET_LIST_SERVICE_ROUTE = `${SERVICE_ROUTES}/list-service`;
 export const ADD_SERVICE_ROUTE = `${SERVICE_ROUTES}/add-service`;
 export const UPDATE_SERVICE_ROUTE = `${SERVICE_ROUTES}/update-service`;
 export const DELETE_SERVICE_ROUTE = `${SERVICE_ROUTES}/delete-service`;
+
+// Media Record Routes
+export const MEDIA_RECORD_ROUTES = `/api/media-records`;
+export const GET_LIST_MEDIA_RECORD_ROUTE = `${MEDIA_RECORD_ROUTES}/list-media-record`;
+export const ADD_MEDIA_RECORD_ROUTE = `${MEDIA_RECORD_ROUTES}/add-media-record`;
+export const DELETE_MEDIA_RECORD_ROUTE = `${MEDIA_RECORD_ROUTES}/delete-media-record`;

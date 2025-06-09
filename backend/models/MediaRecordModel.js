@@ -1,22 +1,27 @@
 import mongoose from "mongoose";
 
 const MediaRecordSchema = new mongoose.Schema({
-    petId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Pet",
+    pet: {
+        type: String,
         required: true
     },
-    doctorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+    owner: {
+        type: String,
         required: true
     },
     createDate: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        required: true
     },
     diagnosis: {
-        type: String
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+        enum: ['Chờ xử lý', 'Đã xác nhận', 'Hoàn tất', 'Đã hủy'],
+        required: true
     }
 });
 

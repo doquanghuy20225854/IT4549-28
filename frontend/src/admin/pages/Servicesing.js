@@ -34,8 +34,8 @@ const PetServiceAppointments = () => {
     }
   };
 
-  const isCareService = (type) =>
-    CARE_SERVICES.some(keyword => type.toLowerCase().includes(keyword.toLowerCase()));
+  // const isCareService = (type) =>
+  //   CARE_SERVICES.some(keyword => type.toLowerCase().includes(keyword.toLowerCase()));
 
   const validateForm = (data) => {
     if (!data.name || data.name.trim() === "") {
@@ -178,7 +178,7 @@ const PetServiceAppointments = () => {
         </thead>
         <tbody>
           {appointments
-            .filter(item => isCareService(item.name))
+            // .filter(item => isCareService(item.name))
             .map((item, index) => (
               <tr key={item._id}>
                 <td>{index + 1}</td>

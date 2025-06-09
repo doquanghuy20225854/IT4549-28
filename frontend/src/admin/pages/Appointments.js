@@ -1,64 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/Appointments.css";
+import { apiClient } from "../../lib/api-client";
+import { GET_LIST_MEDIA_RECORD_ROUTE, ADD_MEDIA_RECORD_ROUTE, DELETE_MEDIA_RECORD_ROUTE } from "../../utils/constant";
 
 const STATUS_OPTIONS = ["Chờ xử lý", "Đã xác nhận", "Hoàn tất", "Đã huỷ"];
 
 const Appointments = () => {
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      petName: "Mia",
-      ownerName: "Nguyễn Văn A",
-      time: "2025-05-21T10:00",
-      reason: "Khám tổng quát",
-      status: "Chờ xử lý",
-    },
-    {
-      id: 2,
-      petName: "Tom",
-      ownerName: "Trần Thị B",
-      time: "2025-05-21T14:30",
-      reason: "Tiêm phòng",
-      status: "Đã xác nhận",
-    },
-    {
-      id: 3,
-      petName: "Miu",
-      ownerName: "Nguyễn Văn C",
-      time: "2025-05-21T16:00",
-      reason: "Khám da liễu",
-      status: "Hoàn tất",
-    },
-  ]);
+  const [appointments, setAppointments] = useState([]);
 
   const [form, setForm] = useState({
-    petName: "",
-    ownerName: "",
-    time: "",
-    reason: "",
+    pet: "",
+    owner: "",
+    createDate: "",
+    diagnosis: "",
     status: "Chờ xử lý",
   });
 
-  const handleAdd = () => {
-    const { petName, ownerName, time, reason } = form;
 
-    if (!petName || !ownerName || !time || !reason) {
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      const response = await apiClient.get(GET_LIST_MEDIA_RECORD_ROUTE, {withCredentials: true});
+      setAppointments(response.data);
+    }
+    fetchAppointments();
+  }, []);
+
+  const handleAdd = async () => {
+    const { pet, owner, createDate, diagnosis, status } = form;
+
+    if (!pet || !owner || !createDate || !diagnosis || !status) {
       alert("Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
     const newAppointment = {
-      id: Date.now(),
       ...form,
     };
 
-    setAppointments([...appointments, newAppointment]);
-    setForm({ petName: "", ownerName: "", time: "", reason: "", status: "Chờ xử lý" });
+    try {
+      const response = await apiClient.post(ADD_MEDIA_RECORD_ROUTE, newAppointment, {withCredentials: true});
+      if (response.status === 201) {
+        setAppointments([...appointments, newAppointment]);
+        setForm({ pet: "", owner: "", createDate: "", diagnosis: "", status: "Chờ xử lý" });
+      }
+    } catch (error) {
+      console.error("Error adding appointment:", error);
+    }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Bạn chắc chắn muốn xóa lịch hẹn này?")) {
-      setAppointments((prev) => prev.filter((app) => app.id !== id));
+      try {
+        const response = await apiClient.delete(`${DELETE_MEDIA_RECORD_ROUTE}/${id}`, {withCredentials: true});
+        if (response.status === 200) {
+          setAppointments((prev) => prev.filter((app) => app.id !== id));
+        }
+      } catch (error) {
+        console.error("Error deleting appointment:", error);
+      }
     }
   };
 
@@ -76,29 +75,29 @@ const Appointments = () => {
         <input
           type="text"
           placeholder="Tên thú cưng"
-          value={form.petName}
-          onChange={(e) => setForm({ ...form, petName: e.target.value })}
+          value={form.pet}
+          onChange={(e) => setForm({ ...form, pet: e.target.value })}
         />
         <input
           type="text"
           placeholder="Tên chủ nuôi"
-          value={form.ownerName}
-          onChange={(e) => setForm({ ...form, ownerName: e.target.value })}
+          value={form.owner}
+          onChange={(e) => setForm({ ...form, owner: e.target.value })}
         />
         <input
           type="datetime-local"
-          value={form.time}
-          onChange={(e) => setForm({ ...form, time: e.target.value })}
+          value={form.createDate}
+          onChange={(e) => setForm({ ...form, createDate: e.target.value })}
         />
         <input
           type="text"
           placeholder="Lý do khám"
-          value={form.reason}
-          onChange={(e) => setForm({ ...form, reason: e.target.value })}
+          value={form.diagnosis}
+          onChange={(e) => setForm({ ...form, diagnosis: e.target.value })}
         />
         <select
           value={form.status}
-          onChange={(e) => setForm({ ...form, status: e.target.value })}
+          onChange={(e) => setForm({ ...form,   status: e.target.value })}
         >
           {STATUS_OPTIONS.map((status) => (
             <option key={status} value={status}>{status}</option>
@@ -123,10 +122,10 @@ const Appointments = () => {
           {appointments.map((app, index) => (
             <tr key={app.id}>
               <td>{index + 1}</td>
-              <td>{app.petName}</td>
-              <td>{app.ownerName}</td>
-              <td>{app.time.replace("T", " ")}</td>
-              <td>{app.reason}</td>
+              <td>{app.pet}</td>
+              <td>{app.owner}</td>
+              <td>{new Date(app.createDate).toLocaleString('vi-VN')}</td>
+              <td>{app.diagnosis}</td>
               <td>
                 <select
                   value={app.status}
