@@ -1,36 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/StaffAppointments.css";
 
 const STATUS_OPTIONS = ["Chờ xử lý", "Đã xác nhận", "Hoàn tất", "Đã huỷ"];
 
 const StaffAppointments = () => {
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      petName: "Mia",
-      ownerName: "Nguyễn Văn A",
-      time: "2025-05-21T10:00",
-      reason: "Khám tổng quát",
-      status: "Chờ xử lý",
-    },
-    {
-      id: 2,
-      petName: "Tom",
-      ownerName: "Trần Thị B",
-      time: "2025-05-21T14:30",
-      reason: "Tiêm phòng",
-      status: "Đã xác nhận",
-    },
-    {
-      id: 3,
-      petName: "Miu",
-      ownerName: "Nguyễn Văn C",
-      time: "2025-05-21T16:00",
-      reason: "Khám da liễu",
-      status: "Hoàn tất",
-    },
-  ]);
-
+  const [appointments, setAppointments] = useState([]);
   const [form, setForm] = useState({
     petName: "",
     ownerName: "",
@@ -39,7 +13,25 @@ const StaffAppointments = () => {
     status: "Chờ xử lý",
   });
 
-  const handleAdd = () => {
+  // Lấy danh sách lịch hẹn từ API
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/appointments');
+        const data = await response.json();
+        if (data.success) {
+          setAppointments(data.data);
+        } else {
+          console.error('Failed to fetch appointments:', data.error);
+        }
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+    fetchAppointments();
+  }, []);
+
+  const handleAdd = async () => {
     const { petName, ownerName, time, reason } = form;
 
     if (!petName || !ownerName || !time || !reason) {
@@ -47,25 +39,63 @@ const StaffAppointments = () => {
       return;
     }
 
-    const newAppointment = {
-      id: Date.now(),
-      ...form,
-    };
-
-    setAppointments([...appointments, newAppointment]);
-    setForm({ petName: "", ownerName: "", time: "", reason: "", status: "Chờ xử lý" });
-  };
-
-  const handleDelete = (id) => {
-    if (window.confirm("Bạn chắc chắn muốn xóa lịch hẹn này?")) {
-      setAppointments((prev) => prev.filter((app) => app.id !== id));
+    try {
+      const response = await fetch('http://localhost:3001/api/appointments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      });
+      const data = await response.json();
+      if (data.success) {
+        setAppointments([...appointments, data.data]);
+        setForm({ petName: "", ownerName: "", time: "", reason: "", status: "Chờ xử lý" });
+      } else {
+        alert('Thêm lịch hẹn thất bại: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error adding appointment:', error);
+      alert('Thêm lịch hẹn thất bại');
     }
   };
 
-  const handleStatusChange = (id, newStatus) => {
-    setAppointments((prev) =>
-      prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app))
-    );
+  const handleDelete = async (id) => {
+    if (window.confirm("Bạn chắc chắn muốn xóa lịch hẹn này?")) {
+      try {
+        const response = await fetch(`http://localhost:3001/api/appointments/${id}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        if (data.success) {
+          setAppointments((prev) => prev.filter((app) => app._id !== id));
+        } else {
+          alert('Xóa lịch hẹn thất bại: ' + data.error);
+        }
+      } catch (error) {
+        console.error('Error deleting appointment:', error);
+        alert('Xóa lịch hẹn thất bại');
+      }
+    }
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/appointments/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setAppointments((prev) =>
+          prev.map((app) => (app._id === id ? data.data : app))
+        );
+      } else {
+        alert('Cập nhật trạng thái thất bại: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error updating appointment status:', error);
+      alert('Cập nhật trạng thái thất bại');
+    }
   };
 
   return (
@@ -121,7 +151,7 @@ const StaffAppointments = () => {
         </thead>
         <tbody>
           {appointments.map((app, index) => (
-            <tr key={app.id}>
+            <tr key={app._id}>
               <td>{index + 1}</td>
               <td>{app.petName}</td>
               <td>{app.ownerName}</td>
@@ -130,7 +160,7 @@ const StaffAppointments = () => {
               <td>
                 <select
                   value={app.status}
-                  onChange={(e) => handleStatusChange(app.id, e.target.value)}
+                  onChange={(e) => handleStatusChange(app._id, e.target.value)}
                 >
                   {STATUS_OPTIONS.map((status) => (
                     <option key={status} value={status}>{status}</option>
@@ -138,7 +168,7 @@ const StaffAppointments = () => {
                 </select>
               </td>
               <td>
-                <button className="btn-delete" onClick={() => handleDelete(app.id)}>
+                <button className="btn-delete" onClick={() => handleDelete(app._id)}>
                   <i className="fa fa-trash"></i>
                 </button>
               </td>

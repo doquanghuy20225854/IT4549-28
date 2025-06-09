@@ -1,45 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/StaffCustomers.css"; // Import CSS riêng cho staff
 
-const initialCustomers = [
-  {
-    id: 1,
-    name: "Nguyễn Văn A",
-    phone: "0901234567",
-    email: "nguyenvana@gmail.com",
-    address: "123 Đường Láng, Hà Nội",
-    pets: [
-      { name: "Mia", species: "Mèo Ba Tư", health: "Khỏe mạnh", services: ["Spa 5 Sao - 2025-06-01", "Khám tổng quát - 2025-05-21"] },
-      { name: "Bobi", species: "Chó Poodle", health: "Dị ứng thức ăn", services: ["Tắm - 2025-06-02"] },
-    ],
-  },
-  {
-    id: 2,
-    name: "Trần Thị B",
-    phone: "0912345678",
-    email: "tranthib@gmail.com",
-    address: "456 Nguyễn Trãi, TP.HCM",
-    pets: [
-      { name: "Tom", species: "Chó Corgi", health: "Khỏe mạnh", services: ["Tiêm phòng - 2025-05-21"] },
-    ],
-  },
-  {
-    id: 3,
-    name: "Nguyễn Văn C",
-    phone: "0923456789",
-    email: "nguyenvanc@gmail.com",
-    address: "789 Lê Lợi, Đà Nẵng",
-    pets: [
-      { name: "Miu", species: "Mèo Anh lông ngắn", health: "Vấn đề da liễu", services: ["Khám da liễu - 2025-05-21"] },
-    ],
-  },
-];
-
 const StaffCustomers = () => {
-  const [customers, setCustomers] = useState(initialCustomers);
+  const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [editing, setEditing] = useState(null);
   const [viewing, setViewing] = useState(null);
+
+  // Lấy danh sách khách hàng từ API
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/customers', {
+          credentials: 'include'
+        });
+        const data = await response.json();
+        if (data.success) {
+          setCustomers(data.data);
+        } else {
+          console.error('Failed to fetch customers:', data.error);
+        }
+      } catch (error) {
+        console.error('Error fetching customers:', error);
+      }
+    };
+    fetchCustomers();
+  }, []);
 
   // Hàm tìm kiếm khách hàng
   const filteredCustomers = customers.filter(
@@ -52,13 +38,28 @@ const StaffCustomers = () => {
   const handleEdit = (customer) => setEditing({ ...customer });
 
   // Hàm lưu thông tin đã chỉnh sửa
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (!editing.name || !editing.phone || !editing.email) {
       alert("Vui lòng điền đầy đủ thông tin: Tên, Số điện thoại, Email!");
       return;
     }
-    setCustomers(customers.map((c) => (c.id === editing.id ? editing : c)));
-    setEditing(null);
+    try {
+      const response = await fetch(`http://localhost:3001/api/customers/${editing._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editing)
+      });
+      const data = await response.json();
+      if (data.success) {
+        setCustomers(customers.map((c) => (c._id === editing._id ? data.data : c)));
+        setEditing(null);
+      } else {
+        alert('Cập nhật thất bại: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error updating customer:', error);
+      alert('Cập nhật thất bại');
+    }
   };
 
   // Hàm gửi thông báo (giả lập)
@@ -94,7 +95,7 @@ const StaffCustomers = () => {
         </thead>
         <tbody>
           {filteredCustomers.map((customer) => (
-            <tr key={customer.id}>
+            <tr key={customer._id}>
               <td>{customer.name}</td>
               <td>{customer.phone}</td>
               <td>{customer.email}</td>
@@ -161,12 +162,12 @@ const StaffCustomers = () => {
           <p><strong>Địa chỉ:</strong> {viewing.address}</p>
           <h4>Danh sách thú cưng</h4>
           <ul>
-            {viewing.pets.map((pet, index) => (
+            {viewing.pets && viewing.pets.map((pet, index) => (
               <li key={index}>
                 <strong>{pet.name}</strong> ({pet.species}) - Sức khỏe: {pet.health}
                 <br />
                 <strong>Lịch sử dịch vụ:</strong>{" "}
-                {pet.services.length > 0 ? pet.services.join(", ") : "Chưa có dịch vụ"}
+                {pet.services && pet.services.length > 0 ? pet.services.join(", ") : "Chưa có dịch vụ"}
               </li>
             ))}
           </ul>

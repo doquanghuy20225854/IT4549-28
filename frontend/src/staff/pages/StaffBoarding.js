@@ -17,6 +17,7 @@ const StaffBoarding = () => {
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [customers, setCustomers] = useState([]);
 
   const nameRef = useRef();
   const speciesRef = useRef();
@@ -37,6 +38,14 @@ const StaffBoarding = () => {
       }
     };
     fetchPets();
+  }, []);
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      const response = await apiClient.get('/api/customers');
+      if (response.data.success) setCustomers(response.data.data);
+    };
+    fetchCustomers();
   }, []);
 
   const filteredPets = pets.filter(pet =>

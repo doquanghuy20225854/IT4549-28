@@ -5,6 +5,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/AuthRoutes.js';
 import petRoutes from './routes/PetRoutes.js';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import userRoutes from './routes/UserRoutes.js';
 import serviceRoutes from './routes/ServiceRoutes.js';
 import mediaRecordRoutes from './routes/MediaRecordRoutes.js';
@@ -12,7 +14,7 @@ import mediaRecordRoutes from './routes/MediaRecordRoutes.js';
 dotenv.config()
 
 const app = express();
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3001;
 const databaseUrl = process.env.DATABASE_URL;
 
 // Cấu hình CORS trước các middleware khác
@@ -27,6 +29,12 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
+
+// Middleware để log cookie cho debugging
+app.use((req, res, next) => {
+  console.log('Cookies:', req.cookies);
+  next();
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/pets', petRoutes);
