@@ -5,11 +5,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/AuthRoutes.js';
 import petRoutes from './routes/PetRoutes.js';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
 import userRoutes from './routes/UserRoutes.js';
 import serviceRoutes from './routes/ServiceRoutes.js';
 import mediaRecordRoutes from './routes/MediaRecordRoutes.js';
+import appointmentRoutes from './routes/AppointmentRoutes.js';
 
 dotenv.config()
 
@@ -30,17 +29,13 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Middleware để log cookie cho debugging
-app.use((req, res, next) => {
-  console.log('Cookies:', req.cookies);
-  next();
-});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/pets', petRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/media-records', mediaRecordRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

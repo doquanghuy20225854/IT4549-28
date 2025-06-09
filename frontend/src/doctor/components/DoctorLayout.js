@@ -4,13 +4,17 @@ import FooterDoctor from "./DoctorFooter";
 import "../styles/DoctorLayout.css";
 
 const DoctorLayout = ({ children }) => {
-    return (
-      <>
-        <HeaderDoctor />
-        <main>{children}</main>
-        <FooterDoctor />
-      </>
-    );
-  };
-  
-  export default DoctorLayout;
+  return (
+    <div className="doctor-layout">
+      <HeaderDoctor />
+      <main className="doctor-main">
+        <div className="doctor-content">
+          {children}
+        </div>
+      </main>
+      <FooterDoctor />
+    </div>
+  );
+};
+
+export default DoctorLayout;

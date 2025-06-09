@@ -31,3 +31,12 @@ export const MEDIA_RECORD_ROUTES = `/api/media-records`;
 export const GET_LIST_MEDIA_RECORD_ROUTE = `${MEDIA_RECORD_ROUTES}/list-media-record`;
 export const ADD_MEDIA_RECORD_ROUTE = `${MEDIA_RECORD_ROUTES}/add-media-record`;
 export const DELETE_MEDIA_RECORD_ROUTE = `${MEDIA_RECORD_ROUTES}/delete-media-record`;
+
+// Appointment Routes
+export const APPOINTMENT_ROUTES = `/api/appointments`;
+export const GET_ALL_APPOINTMENTS = `${APPOINTMENT_ROUTES}`;
+export const ADD_APPOINTMENT = `${APPOINTMENT_ROUTES}`;
+export const UPDATE_APPOINTMENT = `${APPOINTMENT_ROUTES}`;
+export const DELETE_APPOINTMENT = `${APPOINTMENT_ROUTES}`;
+
+// 

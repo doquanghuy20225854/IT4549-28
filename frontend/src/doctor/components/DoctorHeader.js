@@ -44,7 +44,6 @@ const HeaderDoctor = () => {
       <nav className="doctor-header_nav">
         <Link to="/doctor" className="doctor-header_nav-item">Trang chủ</Link>
         <Link to="/doctor/boarding" className="doctor-header_nav-item">Lưu trú</Link>
-        <Link to="/doctor/services" className="doctor-header_nav-item">Dịch vụ</Link>
         <Link to="/doctor/appointments" className="doctor-header_nav-item">Lịch Khám </Link>
         <Link to="/doctor/store" className="doctor-header_nav-item">Sản phẩm</Link>
       </nav>

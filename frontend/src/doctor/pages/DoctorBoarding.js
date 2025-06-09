@@ -1,13 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../styles/DoctorBoarding.css";
-
-const dummyData = [
-  { id: 1, name: "Mèo Tom", species: "Mèo", owner: "Nguyễn Văn A", checkIn: "2025-05-18", checkOut: "2025-05-20" },
-  { id: 2, name: "Chó Rex", species: "Chó", owner: "Trần Thị B", checkIn: "2025-05-19", checkOut: "2025-05-21" },
-  { id: 3, name: "Mèo Mun", species: "Mèo", owner: "Lê Văn C", checkIn: "2025-05-20", checkOut: "2025-05-22" },
-  { id: 4, name: "Mèo Miu", species: "Mèo", owner: "Nguyễn Văn D", checkIn: "2025-05-21", checkOut: "2025-05-23" },
-  { id: 5, name: "Chó Sữa", species: "Chó", owner: "Trần Thị E", checkIn: "2025-05-22", checkOut: "2025-05-24" },
-];
+import { apiClient } from "../../lib/api-client";
+import { 
+  GET_ALL_PETS_ROUTE,
+  ADD_PET_ROUTE,
+  UPDATE_PET_ROUTE,
+  DELETE_PET_ROUTE 
+} from "../../utils/constant";
 
 const getStatus = (checkIn, checkOut) => {
   const today = new Date().toISOString().split("T")[0];
@@ -17,16 +16,43 @@ const getStatus = (checkIn, checkOut) => {
 };
 
 const DoctorBoarding = () => {
-  const [pets, setPets] = useState(dummyData);
+  const [pets, setPets] = useState([]);
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const nameRef = useRef();
   const speciesRef = useRef();
   const ownerRef = useRef();
   const checkInRef = useRef();
   const checkOutRef = useRef();
+
+  useEffect(() => {
+    fetchPets();
+  }, []);
+
+  const fetchPets = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      console.log('Calling API:', GET_ALL_PETS_ROUTE);
+      const response = await apiClient.get(GET_ALL_PETS_ROUTE, {withCredentials: true});
+      console.log('API Response:', response.data);
+      if (response.data.success) {
+        setPets(response.data.data);
+      } else {
+        console.error('API Error:', response.data.error);
+        setError("Không thể tải danh sách thú cưng");
+      }
+    } catch (error) {
+      console.error("Error fetching pets:", error.response || error);
+      setError("Có lỗi xảy ra khi tải danh sách thú cưng");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredPets = pets.filter(pet =>
     pet.name.toLowerCase().includes(search.toLowerCase())
@@ -40,41 +66,115 @@ const DoctorBoarding = () => {
     setDeleteTarget(pet);
   };
 
-  const handleDeleteConfirmed = () => {
+  const handleDeleteConfirmed = async () => {
     if (deleteTarget) {
-      setPets(pets.filter(pet => pet.id !== deleteTarget.id));
-      setDeleteTarget(null);
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await apiClient.delete(`${DELETE_PET_ROUTE}/${deleteTarget._id}`, {withCredentials: true});
+        if (response.data.success) {
+          setPets(pets.filter(pet => pet._id !== deleteTarget._id));
+          alert("Xóa thú cưng thành công!");
+        } else {
+          setError("Không thể xóa thú cưng");
+        }
+      } catch (error) {
+        setError("Có lỗi xảy ra khi xóa thú cưng");
+        console.error("Error deleting pet:", error);
+      } finally {
+        setLoading(false);
+        setDeleteTarget(null);
+      }
     }
   };
 
-  const handleAddConfirmed = () => {
-    const newPet = {
-      id: Date.now(),
-      name: nameRef.current.value || "Chưa đặt tên",
-      species: speciesRef.current.value || "Không rõ",
-      owner: ownerRef.current.value || "Không rõ",
-      checkIn: checkInRef.current.value || new Date().toISOString().split("T")[0],
-      checkOut: checkOutRef.current.value || new Date().toISOString().split("T")[0],
-    };
-    setPets([...pets, newPet]);
-    setShowAddModal(false);
+  const handleAddConfirmed = async () => {
+    try {
+      if (!nameRef.current.value || !speciesRef.current.value || !ownerRef.current.value) {
+        alert("Vui lòng điền đầy đủ thông tin bắt buộc (Tên, Loài, Chủ nuôi)");
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      const newPet = {
+        name: nameRef.current.value,
+        species: speciesRef.current.value,
+        ownerName: ownerRef.current.value,
+        checkIn: checkInRef.current.value || new Date().toISOString().split("T")[0],
+        checkOut: checkOutRef.current.value || new Date().toISOString().split("T")[0],
+        age: 0,
+        description: ""
+      };
+
+      const response = await apiClient.post(ADD_PET_ROUTE, newPet, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data.success) {
+        await fetchPets();
+        setShowAddModal(false);
+        alert("Thêm thú cưng thành công!");
+      } else {
+        setError("Không thể thêm thú cưng");
+      }
+    } catch (error) {
+      setError("Có lỗi xảy ra khi thêm thú cưng");
+      console.error("Error adding pet:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleEdit = (id) => {
-    const petToEdit = pets.find(pet => pet.id === id);
+  const handleEdit = async (id) => {
+    const petToEdit = pets.find(pet => pet._id === id);
     if (!petToEdit) return;
 
-    const updatedPet = {
-      ...petToEdit,
-      name: prompt("Tên thú cưng:", petToEdit.name) || petToEdit.name,
-      species: prompt("Loài (Chó/Mèo):", petToEdit.species) || petToEdit.species,
-      owner: prompt("Chủ nuôi:", petToEdit.owner) || petToEdit.owner,
-      checkIn: prompt("Ngày nhận (YYYY-MM-DD):", petToEdit.checkIn) || petToEdit.checkIn,
-      checkOut: prompt("Ngày trả (YYYY-MM-DD):", petToEdit.checkOut) || petToEdit.checkOut,
-    };
+    try {
+      // const updatedPet = {
+      //   ...petToEdit,
+      //   name: prompt("Tên thú cưng:", petToEdit.name) || petToEdit.name,
+      //   species: prompt("Loài (Chó/Mèo):", petToEdit.species) || petToEdit.species,
+      //   ownerName: prompt("Chủ nuôi:", petToEdit.ownerName) || petToEdit.ownerName,
+      //   checkIn: prompt("Ngày nhận (YYYY-MM-DD):", petToEdit.checkIn) || petToEdit.checkIn,
+      //   checkOut: prompt("Ngày trả (YYYY-MM-DD):", petToEdit.checkOut) || petToEdit.checkOut,
+      // };
 
-    setPets(pets.map(pet => pet.id === id ? updatedPet : pet));
+      // setLoading(true);
+      // setError(null);
+
+      // const response = await apiClient.put(`${UPDATE_PET_ROUTE}/${id}`, updatedPet, {
+      //   withCredentials: true,
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // });
+
+      // if (response.data.success) {
+      //   setPets(pets.map(pet => pet._id === id ? response.data.data : pet));
+      //   alert("Cập nhật thông tin thành công!");
+      // } else {
+      //   setError("Không thể cập nhật thông tin thú cưng");
+      // }
+    } catch (error) {
+      setError("Có lỗi xảy ra khi cập nhật thông tin thú cưng");
+      console.error("Error updating pet:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) {
+    return <div className="loading">Đang tải...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   return (
     <div className="boarding-container">
@@ -107,16 +207,16 @@ const DoctorBoarding = () => {
         </thead>
         <tbody>
           {filteredPets.map((pet, index) => (
-            <tr key={pet.id}>
+            <tr key={pet._id}>
               <td>{index + 1}</td>
               <td>{pet.name}</td>
               <td>{pet.species}</td>
-              <td>{pet.owner}</td>
+              <td>{pet.ownerName}</td>
               <td>{pet.checkIn}</td>
               <td>{pet.checkOut}</td>
               <td>{getStatus(pet.checkIn, pet.checkOut)}</td>
               <td>
-                <button className="btn-edit" onClick={() => handleEdit(pet.id)}>
+                <button className="btn-edit" onClick={() => handleEdit(pet._id)}>
                   <i className="fa fa-pencil"></i>
                 </button>
                 <button className="btn-delete" onClick={() => confirmDelete(pet)}>
@@ -153,7 +253,7 @@ const DoctorBoarding = () => {
         <div className="pet-modal">
           <div className="pet-modal-content">
             <h3>Xoá thú cưng</h3>
-            <p>Bạn có chắc muốn xoá <strong>{deleteTarget.name}</strong> của <strong>{deleteTarget.owner}</strong> không?</p>
+            <p>Bạn có chắc muốn xoá <strong>{deleteTarget.name}</strong> của <strong>{deleteTarget.ownerName}</strong> không?</p>
             <button onClick={handleDeleteConfirmed}>Xoá</button>
             <button onClick={() => setDeleteTarget(null)}>Huỷ</button>
           </div>
