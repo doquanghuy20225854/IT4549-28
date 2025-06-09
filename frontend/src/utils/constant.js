@@ -39,4 +39,11 @@ export const ADD_APPOINTMENT = `${APPOINTMENT_ROUTES}`;
 export const UPDATE_APPOINTMENT = `${APPOINTMENT_ROUTES}`;
 export const DELETE_APPOINTMENT = `${APPOINTMENT_ROUTES}`;
 
+// Customer Routes
+export const CUSTOMER_ROUTES = `/api/customers`;
+export const GET_ALL_CUSTOMERS_ROUTE = `${CUSTOMER_ROUTES}`;
+export const ADD_CUSTOMER_ROUTE = `${CUSTOMER_ROUTES}`;
+export const UPDATE_CUSTOMER_ROUTE = `${CUSTOMER_ROUTES}/:id`;
+export const DELETE_CUSTOMER_ROUTE = `${CUSTOMER_ROUTES}/:id`;
+
 // 

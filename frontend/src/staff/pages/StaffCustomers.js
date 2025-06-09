@@ -6,6 +6,9 @@ const StaffCustomers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [editing, setEditing] = useState(null);
   const [viewing, setViewing] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newCustomer, setNewCustomer] = useState({ name: "", phone: "", email: "", address: "" });
+  const [appointments, setAppointments] = useState([]);
 
   // Lấy danh sách khách hàng từ API
   useEffect(() => {
@@ -68,9 +71,74 @@ const StaffCustomers = () => {
     // Gọi API gửi thông báo nếu có backend
   };
 
+  // Thêm khách hàng mới
+  const handleAddCustomer = async () => {
+    if (!newCustomer.name || !newCustomer.phone || !newCustomer.email) {
+      alert("Vui lòng nhập đủ thông tin!");
+      return;
+    }
+    try {
+      const response = await fetch('http://localhost:3001/api/customers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCustomer),
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.success) {
+        setCustomers([...customers, data.data]);
+        setShowAddModal(false);
+        setNewCustomer({ name: "", phone: "", email: "", address: "" });
+      } else {
+        alert('Thêm khách hàng thất bại: ' + data.error);
+      }
+    } catch (error) {
+      alert('Thêm khách hàng thất bại');
+    }
+  };
+
+  // Khi bấm xem khách hàng, lấy lịch sử đặt lịch
+  const handleView = async (customer) => {
+    setViewing(customer);
+    try {
+      const response = await fetch(`http://localhost:3001/api/customers/${customer._id}/appointments`, {
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.success) {
+        setAppointments(data.data);
+      } else {
+        setAppointments([]);
+      }
+    } catch (error) {
+      setAppointments([]);
+    }
+  };
+
+  // Thêm chức năng xóa khách hàng
+  const handleDelete = async (customer) => {
+    if (!window.confirm(`Bạn có chắc muốn xóa khách hàng ${customer.name}?`)) return;
+    try {
+      const response = await fetch(`http://localhost:3001/api/customers/${customer._id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.success) {
+        setCustomers(customers.filter(c => c._id !== customer._id));
+      } else {
+        alert('Xóa khách hàng thất bại: ' + data.error);
+      }
+    } catch (error) {
+      alert('Xóa khách hàng thất bại');
+    }
+  };
+
   return (
     <div className="staff-customers">
       <h2>Quản lý khách hàng</h2>
+
+      {/* Đã bỏ nút Thêm khách hàng mới và modal thêm khách hàng */}
 
       {/* Thanh tìm kiếm */}
       <div className="search-section">
@@ -88,7 +156,6 @@ const StaffCustomers = () => {
           <tr>
             <th>Tên</th>
             <th>Số điện thoại</th>
-            <th>Email</th>
             <th>Địa chỉ</th>
             <th>Hành động</th>
           </tr>
@@ -98,20 +165,16 @@ const StaffCustomers = () => {
             <tr key={customer._id}>
               <td>{customer.name}</td>
               <td>{customer.phone}</td>
-              <td>{customer.email}</td>
               <td>{customer.address}</td>
               <td>
                 <button className="edit-btn" onClick={() => handleEdit(customer)}>
                   Sửa
                 </button>
-                <button className="view-btn" onClick={() => setViewing(customer)}>
+                <button className="view-btn" onClick={() => handleView(customer)}>
                   Xem
                 </button>
-                <button
-                  className="notify-btn"
-                  onClick={() => handleSendNotification(customer)}
-                >
-                  Gửi thông báo
+                <button className="delete-btn" onClick={() => handleDelete(customer)}>
+                  Xóa
                 </button>
               </td>
             </tr>
@@ -160,14 +223,14 @@ const StaffCustomers = () => {
           <p><strong>Số điện thoại:</strong> {viewing.phone}</p>
           <p><strong>Email:</strong> {viewing.email}</p>
           <p><strong>Địa chỉ:</strong> {viewing.address}</p>
-          <h4>Danh sách thú cưng</h4>
+          <h4>Lịch sử đặt lịch</h4>
           <ul>
-            {viewing.pets && viewing.pets.map((pet, index) => (
-              <li key={index}>
-                <strong>{pet.name}</strong> ({pet.species}) - Sức khỏe: {pet.health}
-                <br />
-                <strong>Lịch sử dịch vụ:</strong>{" "}
-                {pet.services && pet.services.length > 0 ? pet.services.join(", ") : "Chưa có dịch vụ"}
+            {appointments.length === 0 && <li>Chưa có lịch hẹn nào</li>}
+            {appointments.map((app, idx) => (
+              <li key={app._id || idx}>
+                <strong>{app.petName}</strong> - {app.reason} <br/>
+                <span>Thời gian: {new Date(app.time).toLocaleString('vi-VN')}</span> <br/>
+                <span>Trạng thái: {app.status}</span>
               </li>
             ))}
           </ul>

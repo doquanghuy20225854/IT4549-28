@@ -9,6 +9,7 @@ import userRoutes from './routes/UserRoutes.js';
 import serviceRoutes from './routes/ServiceRoutes.js';
 import mediaRecordRoutes from './routes/MediaRecordRoutes.js';
 import appointmentRoutes from './routes/AppointmentRoutes.js';
+import customerRoutes from './routes/CustomerRoutes.js';
 
 dotenv.config()
 
@@ -36,6 +37,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/media-records', mediaRecordRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/customers', customerRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

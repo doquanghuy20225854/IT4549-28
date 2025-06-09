@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../styles/StaffBoarding.css";
 import { apiClient } from "../../lib/api-client";
-import { ADD_PET_ROUTE, DELETE_PET_ROUTE } from "../../utils/constant";
+import { ADD_PET_ROUTE, DELETE_PET_ROUTE, GET_ALL_CUSTOMERS_ROUTE } from "../../utils/constant";
 
 const GET_ALL_PETS_ROUTE = '/api/pets/get-all-pets';
 
@@ -42,8 +42,16 @@ const StaffBoarding = () => {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const response = await apiClient.get('/api/customers');
-      if (response.data.success) setCustomers(response.data.data);
+      try {
+        const response = await apiClient.get(GET_ALL_CUSTOMERS_ROUTE);
+        if (response.data.success) {
+          setCustomers(response.data.data);
+        } else {
+          console.error('Lỗi khi lấy danh sách khách hàng:', response.data.error);
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy danh sách khách hàng:', error);
+      }
     };
     fetchCustomers();
   }, []);
