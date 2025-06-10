@@ -12,6 +12,31 @@ export const getAllAppointments = async (req, res) => {
 
 export const addAppointment = async (req, res) => {
   try {
+    const appointment = new Appointment(req.body);
+    await appointment.save();
+    res.status(201).json({ success: true, data: appointment });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+export const addDoctorAppointment = async (req, res) => {
+  try {
+    const appointmentData = {
+      ...req.body,
+      status: 'Chờ xử lý',
+      assignedTo: 'doctor' // Đánh dấu lịch hẹn này thuộc về bác sĩ
+    };
+    const appointment = new Appointment(appointmentData);
+    await appointment.save();
+    res.status(201).json({ success: true, data: appointment });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+export const addStaffAppointment = async (req, res) => {
+  try {
     // Lấy thông tin khách hàng từ req.body
     const { ownerName, phone, address } = req.body;
 
@@ -28,9 +53,14 @@ export const addAppointment = async (req, res) => {
     }
 
     // Tiếp tục lưu lịch hẹn như cũ
-    const newAppointment = new Appointment(req.body);
-    const saved = await newAppointment.save();
-    res.json({ success: true, data: saved });
+    const appointmentData = {
+      ...req.body,
+      status: 'Chờ xử lý',
+      assignedTo: 'staff' // Đánh dấu lịch hẹn này thuộc về nhân viên
+    };
+    const appointment = new Appointment(appointmentData);
+    await appointment.save();
+    res.status(201).json({ success: true, data: appointment });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -66,6 +96,26 @@ export const getCustomerAppointments = async (req, res) => {
       ownerName: customer.name,
       // Nếu muốn chắc chắn hơn, có thể thêm điều kiện phone nếu lưu phone trong appointment
     });
+    res.json({ success: true, data: appointments });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Lấy lịch hẹn của staff
+export const getStaffAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ assignedTo: 'staff' });
+    res.json({ success: true, data: appointments });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// Lấy lịch hẹn của doctor
+export const getDoctorAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({ assignedTo: 'doctor', serviceType: 'vet' });
     res.json({ success: true, data: appointments });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

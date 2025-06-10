@@ -75,9 +75,13 @@ const BookingPage = () => {
         address: formData.address,
         time: timeISO,
         reason: (serviceData[slug] || slug.replace(/-/g, " ")) + (formData.notes ? ` - ${formData.notes}` : ""),
+        serviceType: slug
       };
 
-      const response = await apiClient.post('/api/appointments', bookingData);
+      // Chọn endpoint dựa trên loại dịch vụ
+      const endpoint = slug === 'vet' ? '/api/appointments/doctor' : '/api/appointments/staff';
+      
+      const response = await apiClient.post(endpoint, bookingData);
       
       if (response.data.success) {
         alert("Đặt lịch thành công!");
@@ -90,6 +94,13 @@ const BookingPage = () => {
           time: "",
           notes: "",
         });
+        
+        // Chuyển hướng dựa trên loại dịch vụ
+        if (slug === 'vet') {
+          window.location.href = '/doctor/appointments';
+        } else {
+          window.location.href = '/staff/appointments';
+        }
       } else {
         throw new Error(response.data.error || "Có lỗi xảy ra khi đặt lịch");
       }

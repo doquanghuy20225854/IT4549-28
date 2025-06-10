@@ -18,8 +18,8 @@ const DoctorAppointments = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await apiClient.get(GET_ALL_APPOINTMENTS, {withCredentials: true});
-        setAppointments(response.data);
+        const response = await apiClient.get('/api/appointments/doctor', {withCredentials: true});
+        setAppointments(response.data.data);
       } catch (err) {
         setError("Không thể tải danh sách lịch hẹn. Vui lòng thử lại sau.");
         console.error("Error fetching appointments:", err);
