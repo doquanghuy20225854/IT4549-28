@@ -5,11 +5,11 @@ import "../styles/StaffLayout.css";
 
 const StaffLayout = ({ children }) => {
     return (
-      <>
+      <div className="staff-layout">
         <HeaderStaff />
-        <main>{children}</main>
+        <main className="staff-main">{children}</main>
         <FooterStaff />
-      </>
+      </div>
     );
   };
   
