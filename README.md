@@ -1,40 +1,37 @@
-my-fullstack-app/
-├── client/                  # Frontend: React
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── .env                 # biến môi trường (frontend)
-│   ├── vite.config.js
-│   └── package.json         # dependencies cho React
-│
-├── server/                  # Backend: Node.js + Express
-│   ├── controllers/         # Xử lý logic (Controller)
-│   ├── models/              # Mongoose schema (MongoDB)
-│   ├── routes/              # Các route API
-│   ├── config/              # Kết nối MongoDB, config server
-│   ├── middleware/          # Middleware (auth, logger...)
-│   ├── index.js             # Điểm bắt đầu Express server
-│   ├── .env                 # biến môi trường (backend)
-│   └── package.json         # dependencies cho server
-│
-├── .gitignore
-└── README.md
+Giải thích cấu trúc:
+Frontend (React.js)
+    /src: Chứa mã nguồn chính
+    /admin: Giao diện quản trị
+    /doctor: Giao diện bác sĩ
+    /staff: Giao diện nhân viên
+    /users: Giao diện người dùng
+    /utils: Các hàm tiện ích
+    /store: Quản lý state (Redux)
+    /routes: Định nghĩa routes
+    /lib: Thư viện và utilities
+Backend (Node.js)
+    /controllers: Xử lý logic nghiệp vụ
+    /models: Định nghĩa cấu trúc dữ liệu
+    /routes: Định nghĩa API endpoints
+    /middlewares: Middleware xử lý request
+    index.js: File khởi động server
+Cấu trúc theo vai trò người dùng
+    Admin: Quản lý toàn bộ hệ thống
+    Doctor: Quản lý dịch vụ và lịch hẹn
+    Staff: Xử lý đặt lịch và dịch vụ
+    Users: Khách hàng sử dụng dịch vụ
+Các file cấu hình
+    package.json: Quản lý dependencies
+    .gitignore: Cấu hình Git
+    .vscode: Cấu hình VS Code
 
 
 ### Chạy frontend
 
 1. Cài đặt các gói cần thiết: `npm install`
-2. Cài thêm tailwindcss: `npm install -D tailwindcss postcss autoprefixer`
-2. Cài đặt các icon: `npm install react-icons`
-3. Cài đặt các icon: `npm install react-router-dom`
-4. Cài đặt các icon: `npm install react-scripts`
-5. Cài đặt biểu đồ: `npm install recharts`
-6. Chạy ứng dụng: `npm start`
-7. Mở trình duyệt và truy cập `http://localhost:3000`
-
+2. Chạy ứng dụng: `npm start`
+### Chạy backend
+1. npm run dev
 
 TK demo
 admin: admin
